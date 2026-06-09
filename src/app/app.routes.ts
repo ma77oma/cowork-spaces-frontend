@@ -65,6 +65,14 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'admin/reservations',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/reservations/pages/admin-reservations-page.component').then(
+            (m) => m.AdminReservationsPageComponent
+          )
+      },
+      {
         path: 'reservations/new',
         loadComponent: () =>
           import('./features/reservations/pages/reservation-create-page.component').then(

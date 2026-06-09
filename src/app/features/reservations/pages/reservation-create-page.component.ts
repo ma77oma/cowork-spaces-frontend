@@ -107,7 +107,7 @@ export class ReservationCreatePageComponent {
       )
       .subscribe({
         next: (reservation) => {
-          this.feedback.showSuccess('Reserva creada correctamente.');
+          this.feedback.showSuccess('Reserva creada y pendiente de confirmación');
           void this.router.navigate(['/reservations', reservation.id]);
         },
         error: (error) => this.errorMessage.set(getHttpErrorMessage(error))

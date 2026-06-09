@@ -61,7 +61,7 @@ export class MyReservationsPageComponent {
       )
       .subscribe({
         next: () => {
-          this.feedback.showSuccess('Reserva cancelada correctamente.');
+          this.feedback.showSuccess('Reserva cancelada correctamente');
           this.loadReservations(false);
         },
         error: (error) => this.errorMessage.set(getHttpErrorMessage(error))

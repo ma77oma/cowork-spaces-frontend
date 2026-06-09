@@ -59,7 +59,7 @@
       <div class="detail-actions">
         <button type="button" class="secondary" (click)="goToNewReservation()">Nueva reserva</button>
 
-        @if (currentReservation.status !== 'Cancelled' && currentReservation.status !== 'Completed') {
+        @if (canCancelReservation(currentReservation.status)) {
           <button type="button" (click)="cancelReservation()" [disabled]="cancelling()">
             {{ cancelling() ? 'Cancelando...' : 'Cancelar reserva' }}
           </button>

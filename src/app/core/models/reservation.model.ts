@@ -15,6 +15,11 @@ export interface ReservationResponse {
   cancelledAt: string | null;
 }
 
+export interface ConfirmReservationResponse {
+  reservationId: string;
+  status: ReservationStatus;
+}
+
 export interface CreateReservationRequest {
   spaceId: string;
   startAt: string;
@@ -80,4 +85,12 @@ export function normalizeReservationStatus(status: ReservationStatusValue): Rese
     default:
       return 'Pending';
   }
+}
+
+export function canCancelReservation(status: ReservationStatus): boolean {
+  return status === 'Pending' || status === 'Confirmed';
+}
+
+export function canConfirmReservation(status: ReservationStatus): boolean {
+  return status === 'Pending';
 }

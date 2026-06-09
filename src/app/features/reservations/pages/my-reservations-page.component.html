@@ -32,7 +32,7 @@
   <section class="my-reservations-page__summary">
     <div>
       <h3>Tienes {{ reservations().length }} reserva{{ reservations().length === 1 ? '' : 's' }}</h3>
-      <p>Consulta los detalles de cada reserva o cancela las que sigan activas.</p>
+      <p>Consulta el estado de cada reserva y cancela las que sigan pendientes o confirmadas.</p>
     </div>
 
     <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">

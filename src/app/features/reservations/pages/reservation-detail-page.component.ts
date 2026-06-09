@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReservationsService } from '../services/reservations.service';
-import { ReservationResponse } from '../../../core/models/reservation.model';
+import { canCancelReservation, ReservationResponse } from '../../../core/models/reservation.model';
 import { PageHeaderComponent } from '../../../shared/ui/page-header.component';
 import { LoadingStateComponent } from '../../../shared/ui/loading-state.component';
 import { ErrorPanelComponent } from '../../../shared/ui/error-panel.component';
@@ -38,6 +38,7 @@ export class ReservationDetailPageComponent {
   protected readonly loading = signal(true);
   protected readonly cancelling = signal(false);
   protected readonly errorMessage = signal('');
+  protected readonly canCancelReservation = canCancelReservation;
 
   constructor() {
     this.loadReservation();
@@ -58,7 +59,7 @@ export class ReservationDetailPageComponent {
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.cancelling.set(false))
       )
-      .subscribe({
+        .subscribe({
         next: (response) => {
           this.reservation.update((reservation) =>
             reservation
@@ -71,7 +72,7 @@ export class ReservationDetailPageComponent {
               : reservation
           );
 
-          this.feedback.showSuccess('Reserva cancelada correctamente.');
+          this.feedback.showSuccess('Reserva cancelada correctamente');
         },
         error: (error) => this.errorMessage.set(getHttpErrorMessage(error))
       });

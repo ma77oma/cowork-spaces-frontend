@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiClientService } from '../../../core/api/api-client.service';
 import {
   CancelReservationResponse,
+  ConfirmReservationResponse,
   CreateReservationRequest,
   normalizeReservationStatus,
   PreviewPriceRequest,
@@ -17,6 +18,10 @@ type RawReservationResponse = Omit<ReservationResponse, 'status'> & {
 };
 
 type RawCancelReservationResponse = Omit<CancelReservationResponse, 'status'> & {
+  status: ReservationStatusValue;
+};
+
+type RawConfirmReservationResponse = Omit<ConfirmReservationResponse, 'status'> & {
   status: ReservationStatusValue;
 };
 
@@ -46,8 +51,23 @@ export class ReservationsService {
     );
   }
 
+  getAll(): Observable<ReservationResponse[]> {
+    return this.api.get<RawReservationResponse[]>('/api/reservations/my').pipe(
+      map((reservations) => reservations.map((reservation) => this.normalizeReservation(reservation)))
+    );
+  }
+
   cancel(id: string): Observable<CancelReservationResponse> {
     return this.api.post<RawCancelReservationResponse>(`/api/reservations/${id}/cancel`, {}).pipe(
+      map((response) => ({
+        ...response,
+        status: normalizeReservationStatus(response.status)
+      }))
+    );
+  }
+
+  confirm(id: string): Observable<ConfirmReservationResponse> {
+    return this.api.post<RawConfirmReservationResponse>(`/api/reservations/${id}/confirm`, {}).pipe(
       map((response) => ({
         ...response,
         status: normalizeReservationStatus(response.status)

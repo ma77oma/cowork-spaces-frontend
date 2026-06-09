@@ -38,7 +38,7 @@
             <td class="reservation-table__actions">
               <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
 
-              @if (reservation.status !== 'Cancelled' && reservation.status !== 'Completed') {
+              @if (canCancelReservation(reservation.status)) {
                 <button
                   type="button"
                   class="danger"
@@ -103,7 +103,7 @@
         <div class="reservation-card__actions">
           <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
 
-          @if (reservation.status !== 'Cancelled' && reservation.status !== 'Completed') {
+          @if (canCancelReservation(reservation.status)) {
             <button
               type="button"
               class="danger"

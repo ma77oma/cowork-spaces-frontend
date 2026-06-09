@@ -9,6 +9,7 @@
     <nav class="shell__nav">
       @if (authService.isAdmin()) {
         <a routerLink="/spaces" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Espacios</a>
+        <a routerLink="/admin/reservations" routerLinkActive="is-active">Reservas pendientes</a>
       }
       <a routerLink="/reservations/new" routerLinkActive="is-active">Nueva reserva</a>
       <a routerLink="/my-reservations" routerLinkActive="is-active">Mis reservas</a>

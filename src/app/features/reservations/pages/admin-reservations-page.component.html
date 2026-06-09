@@ -1,0 +1,145 @@
+<app-page-header
+  title="Reservas pendientes"
+  subtitle="Aprueba manualmente las reservas en estado pendiente sin recargar toda la pantalla."
+/>
+
+@if (loading()) {
+  <app-loading-state label="Cargando reservas pendientes..." />
+} @else if (errorMessage() && !pendingReservations().length) {
+  <section class="admin-reservations-page__feedback">
+    <app-error-panel [message]="errorMessage()" />
+    <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">
+      {{ refreshing() ? 'Actualizando...' : 'Reintentar' }}
+    </button>
+  </section>
+} @else if (!pendingReservations().length) {
+  <app-empty-state
+    title="Sin reservas pendientes"
+    description="No hay reservas en espera de aprobación en este momento."
+  />
+} @else {
+  @if (errorMessage()) {
+    <section class="admin-reservations-page__feedback">
+      <app-error-panel [message]="errorMessage()" />
+      <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">
+        {{ refreshing() ? 'Actualizando...' : 'Reintentar' }}
+      </button>
+    </section>
+  }
+
+  <section class="admin-reservations-page__summary">
+    <div>
+      <h3>Tienes {{ pendingReservations().length }} reserva{{ pendingReservations().length === 1 ? '' : 's' }} pendiente{{ pendingReservations().length === 1 ? '' : 's' }}</h3>
+      <p>Confirma solo las reservas que sigan en estado pendiente.</p>
+    </div>
+
+    <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing() || !!confirmingId()">
+      {{ refreshing() ? 'Actualizando...' : 'Actualizar listado' }}
+    </button>
+  </section>
+
+  <section class="reservation-list">
+    <div class="reservation-list__table-wrapper">
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Espacio</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Duración</th>
+            <th>Precio final</th>
+            <th>Estado</th>
+            <th>Creación</th>
+            <th class="reservation-table__actions">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (reservation of pendingReservations(); track reservation.id) {
+            <tr>
+              <td>
+                <div class="reservation-table__space">
+                  <strong>{{ reservation.spaceName }}</strong>
+                  <span>#{{ reservation.id }}</span>
+                </div>
+              </td>
+              <td>{{ reservation.startAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ reservation.endAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ reservation.durationHours }} h</td>
+              <td>{{ reservation.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+              <td><app-status-badge [value]="reservation.status" /></td>
+              <td>{{ reservation.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td class="reservation-table__actions">
+                <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
+
+                @if (canConfirmReservation(reservation.status)) {
+                  <button
+                    type="button"
+                    class="primary"
+                    (click)="confirmReservation(reservation)"
+                    [disabled]="confirmingId() === reservation.id"
+                  >
+                    {{ confirmingId() === reservation.id ? 'Confirmando...' : 'Confirmar reserva' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="reservation-cards">
+      @for (reservation of pendingReservations(); track reservation.id) {
+        <article class="reservation-card">
+          <div class="reservation-card__header">
+            <div>
+              <h3>{{ reservation.spaceName }}</h3>
+              <p>Reserva #{{ reservation.id }}</p>
+            </div>
+
+            <app-status-badge [value]="reservation.status" />
+          </div>
+
+          <dl class="reservation-card__meta">
+            <div>
+              <dt>Inicio</dt>
+              <dd>{{ reservation.startAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+            <div>
+              <dt>Fin</dt>
+              <dd>{{ reservation.endAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+            <div>
+              <dt>Duración</dt>
+              <dd>{{ reservation.durationHours }} horas</dd>
+            </div>
+            <div>
+              <dt>Precio final</dt>
+              <dd>{{ reservation.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+            </div>
+            <div>
+              <dt>Creación</dt>
+              <dd>{{ reservation.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+          </dl>
+
+          <div class="reservation-card__actions">
+            <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
+
+            @if (canConfirmReservation(reservation.status)) {
+              <button
+                type="button"
+                class="primary"
+                (click)="confirmReservation(reservation)"
+                [disabled]="confirmingId() === reservation.id"
+              >
+                {{ confirmingId() === reservation.id ? 'Confirmando...' : 'Confirmar reserva' }}
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+}
