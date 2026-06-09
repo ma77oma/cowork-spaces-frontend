@@ -1,0 +1,42 @@
+<section class="auth-page">
+  <div class="auth-page__panel">
+    <div>
+      <p class="auth-page__eyebrow">CoWork Spaces</p>
+      <h1>Iniciar sesión</h1>
+      <p class="auth-page__subtitle">Accede para administrar espacios, reservas y reportes.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <app-error-panel [message]="errorMessage()" />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <label>
+        <span>Correo electrónico</span>
+        <input type="email" formControlName="email" placeholder="nombre@empresa.com" />
+      </label>
+
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <small>Ingresa un correo válido.</small>
+      }
+
+      <label>
+        <span>Contraseña</span>
+        <input type="password" formControlName="password" placeholder="Ingresa tu contraseña" />
+      </label>
+
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <small>La contraseña es obligatoria.</small>
+      }
+
+      <button type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Ingresando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="auth-page__footer">
+      ¿No tienes cuenta?
+      <a routerLink="/register">Regístrate</a>
+    </p>
+  </div>
+</section>

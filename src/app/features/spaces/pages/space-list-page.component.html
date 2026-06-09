@@ -1,0 +1,53 @@
+<app-page-header
+  title="Espacios"
+  subtitle="Administra la disponibilidad, capacidad y tarifa base de cada espacio."
+  actionLabel="Nuevo espacio"
+  [actionLink]="['/spaces/new']"
+/>
+
+@if (errorMessage()) {
+  <app-error-panel [message]="errorMessage()" />
+}
+
+@if (loading()) {
+  <app-loading-state label="Cargando espacios..." />
+} @else if (!spaces().length) {
+  <app-empty-state
+    title="Aún no hay espacios"
+    description="Crea tu primer espacio para empezar a recibir reservas."
+  />
+} @else {
+  <section class="space-grid">
+    @for (space of spaces(); track space.id) {
+      <article class="space-card">
+        <div class="space-card__header">
+          <div>
+            <h3>{{ space.name }}</h3>
+            <p>Capacidad para {{ space.capacity }} personas</p>
+          </div>
+
+          <app-status-badge [value]="space.status" />
+        </div>
+
+        <dl class="space-card__meta">
+          <div>
+            <dt>Tarifa</dt>
+            <dd>{{ space.baseHourlyRate | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+          </div>
+          <div>
+            <dt>Horario</dt>
+            <dd>{{ space.openingTime }} - {{ space.closingTime }}</dd>
+          </div>
+        </dl>
+
+        <div class="space-card__actions">
+          <a [routerLink]="['/spaces', space.id]">Ver detalle</a>
+          <a [routerLink]="['/spaces', space.id, 'edit']">Editar</a>
+          <button type="button" (click)="deleteSpace(space)" [disabled]="deletingId() === space.id">
+            {{ deletingId() === space.id ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+        </div>
+      </article>
+    }
+  </section>
+}

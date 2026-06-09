@@ -1,0 +1,52 @@
+<section class="form-card">
+  @if (errorMessage()) {
+    <app-error-panel [message]="errorMessage()" />
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-form">
+    <label>
+      <span>Nombre del espacio</span>
+      <input type="text" formControlName="name" placeholder="Sala ejecutiva" />
+    </label>
+
+    <div class="form-grid">
+      <label>
+        <span>Capacidad</span>
+        <input type="number" min="1" formControlName="capacity" />
+      </label>
+
+      <label>
+        <span>Tarifa por hora</span>
+        <input type="number" min="1" formControlName="baseHourlyRate" />
+      </label>
+
+      <label>
+        <span>Hora de apertura</span>
+        <input type="time" formControlName="openingTime" />
+      </label>
+
+      <label>
+        <span>Hora de cierre</span>
+        <input type="time" formControlName="closingTime" />
+      </label>
+
+      <label>
+        <span>Estado</span>
+        <select formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    @if (form.errors?.['invalidSchedule']) {
+      <small>La hora de cierre debe ser posterior a la apertura.</small>
+    }
+
+    <div class="form-actions">
+      <button type="button" class="secondary" (click)="cancelled.emit()">Cancelar</button>
+      <button type="submit" [disabled]="submitting()">{{ submitting() ? 'Guardando...' : submitLabel() }}</button>
+    </div>
+  </form>
+</section>

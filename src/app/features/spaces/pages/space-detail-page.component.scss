@@ -1,0 +1,38 @@
+.detail-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #dbe3ef;
+  background: #fff;
+}
+
+.detail-card__header,
+.detail-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.detail-card__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+dt {
+  color: #64748b;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.7rem 0.95rem;
+  border-radius: 10px;
+  color: #1d4ed8;
+  text-decoration: none;
+  background: #eff6ff;
+}

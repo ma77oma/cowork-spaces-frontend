@@ -1,0 +1,120 @@
+<section class="reservation-list">
+  <div class="reservation-list__table-wrapper">
+    <table class="reservation-table">
+      <thead>
+        <tr>
+          <th>Espacio</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Duración</th>
+          <th>Precio final</th>
+          <th>Reembolso</th>
+          <th>Estado</th>
+          <th>Creación</th>
+          <th>Cancelación</th>
+          <th class="reservation-table__actions">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (reservation of reservations(); track reservation.id) {
+          <tr>
+            <td>
+              <div class="reservation-table__space">
+                <strong>{{ reservation.spaceName }}</strong>
+                <span>#{{ reservation.id }}</span>
+              </div>
+            </td>
+            <td>{{ reservation.startAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ reservation.endAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ reservation.durationHours }} h</td>
+            <td>{{ reservation.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+            <td>
+              {{ reservation.refundAmount !== null ? (reservation.refundAmount | currency: 'USD' : 'symbol' : '1.2-2') : 'No aplica' }}
+            </td>
+            <td><app-status-badge [value]="reservation.status" /></td>
+            <td>{{ reservation.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ reservation.cancelledAt ? (reservation.cancelledAt | date: 'dd/MM/yyyy HH:mm') : 'No aplica' }}</td>
+            <td class="reservation-table__actions">
+              <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
+
+              @if (reservation.status !== 'Cancelled' && reservation.status !== 'Completed') {
+                <button
+                  type="button"
+                  class="danger"
+                  (click)="cancelRequested.emit(reservation)"
+                  [disabled]="cancellingId() === reservation.id"
+                >
+                  {{ cancellingId() === reservation.id ? 'Cancelando...' : 'Cancelar' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="reservation-cards">
+    @for (reservation of reservations(); track reservation.id) {
+      <article class="reservation-card">
+        <div class="reservation-card__header">
+          <div>
+            <h3>{{ reservation.spaceName }}</h3>
+            <p>Reserva #{{ reservation.id }}</p>
+          </div>
+
+          <app-status-badge [value]="reservation.status" />
+        </div>
+
+        <dl class="reservation-card__meta">
+          <div>
+            <dt>Inicio</dt>
+            <dd>{{ reservation.startAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </div>
+          <div>
+            <dt>Fin</dt>
+            <dd>{{ reservation.endAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </div>
+          <div>
+            <dt>Duración</dt>
+            <dd>{{ reservation.durationHours }} horas</dd>
+          </div>
+          <div>
+            <dt>Precio final</dt>
+            <dd>{{ reservation.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+          </div>
+          <div>
+            <dt>Reembolso</dt>
+            <dd>
+              {{ reservation.refundAmount !== null ? (reservation.refundAmount | currency: 'USD' : 'symbol' : '1.2-2') : 'No aplica' }}
+            </dd>
+          </div>
+          <div>
+            <dt>Creación</dt>
+            <dd>{{ reservation.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </div>
+          <div>
+            <dt>Cancelación</dt>
+            <dd>{{ reservation.cancelledAt ? (reservation.cancelledAt | date: 'dd/MM/yyyy HH:mm') : 'No aplica' }}</dd>
+          </div>
+        </dl>
+
+        <div class="reservation-card__actions">
+          <a [routerLink]="['/reservations', reservation.id]">Ver detalle</a>
+
+          @if (reservation.status !== 'Cancelled' && reservation.status !== 'Completed') {
+            <button
+              type="button"
+              class="danger"
+              (click)="cancelRequested.emit(reservation)"
+              [disabled]="cancellingId() === reservation.id"
+            >
+              {{ cancellingId() === reservation.id ? 'Cancelando...' : 'Cancelar reserva' }}
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </div>
+</section>

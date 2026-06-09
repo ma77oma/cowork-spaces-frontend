@@ -1,0 +1,135 @@
+<app-page-header title="Reportes" subtitle="Analiza ocupación, ingresos y comportamiento de la demanda por fecha." />
+
+<section class="filters-card">
+  <form [formGroup]="form" (ngSubmit)="search()" class="filters-form">
+    <label>
+      <span>Desde</span>
+      <input type="date" formControlName="from" />
+    </label>
+
+    <label>
+      <span>Hasta</span>
+      <input type="date" formControlName="to" />
+    </label>
+
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Consultando...' : 'Consultar' }}</button>
+  </form>
+</section>
+
+@if (errorMessage()) {
+  <app-error-panel [message]="errorMessage()" />
+}
+
+@if (loading()) {
+  <app-loading-state label="Generando reporte..." />
+} @else {
+  @if (report(); as currentReport) {
+    <section class="metrics-grid">
+      <article>
+        <span>Ingreso total</span>
+        <strong>{{ currentReport.totalIncome | currency: 'USD' : 'symbol' : '1.2-2' }}</strong>
+      </article>
+      <article>
+        <span>Hora más demandada</span>
+        <strong>{{ currentReport.mostDemandedHour }}</strong>
+      </article>
+      <article>
+        <span>Espacios analizados</span>
+        <strong>{{ currentReport.spaces.length }}</strong>
+      </article>
+      <article>
+        <span>Reservas totales</span>
+        <strong>{{ getTotalReservations(currentReport) }}</strong>
+      </article>
+    </section>
+
+    @if (!currentReport.spaces.length) {
+      <app-empty-state title="Sin datos para el rango" description="No se encontraron reservas para el período seleccionado." />
+    } @else {
+      <section class="report-chart">
+        <div class="report-chart__header">
+          <h3>Comparativo por espacio</h3>
+          <p>Resumen visual de ingresos, ocupación y reservas usando los datos consolidados del backend.</p>
+        </div>
+
+        <div class="report-chart__legend">
+          <span><i class="report-chart__legend-dot report-chart__legend-dot--income"></i> Ingresos</span>
+          <span><i class="report-chart__legend-dot report-chart__legend-dot--occupancy"></i> Ocupación</span>
+          <span><i class="report-chart__legend-dot report-chart__legend-dot--reservations"></i> Reservas</span>
+        </div>
+
+        <div class="report-chart__bars">
+          @for (space of currentReport.spaces; track space.spaceId) {
+            <div class="report-chart__row">
+              <div class="report-chart__meta">
+                <div>
+                  <strong>{{ space.spaceName }}</strong>
+                  <p>{{ space.totalReservations }} reserva{{ space.totalReservations === 1 ? '' : 's' }}</p>
+                </div>
+
+                <span>{{ space.totalIncome | currency: 'USD' : 'symbol' : '1.2-2' }}</span>
+              </div>
+
+              <div class="report-chart__metric">
+                <div class="report-chart__metric-label">
+                  <span>Ingresos</span>
+                  <strong>{{ space.totalIncome | currency: 'USD' : 'symbol' : '1.2-2' }}</strong>
+                </div>
+                <div class="report-chart__track">
+                  <div
+                    class="report-chart__bar report-chart__bar--income"
+                    [style.width.%]="getIncomeBarWidth(currentReport, space.totalIncome)"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="report-chart__metric">
+                <div class="report-chart__metric-label">
+                  <span>Ocupación</span>
+                  <strong>{{ space.occupancyRate | number: '1.0-2' }}%</strong>
+                </div>
+                <div class="report-chart__track">
+                  <div
+                    class="report-chart__bar report-chart__bar--occupancy"
+                    [style.width.%]="getOccupancyBarWidth(space.occupancyRate)"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="report-chart__metric">
+                <div class="report-chart__metric-label">
+                  <span>Reservas</span>
+                  <strong>{{ space.totalReservations }}</strong>
+                </div>
+                <div class="report-chart__track">
+                  <div
+                    class="report-chart__bar report-chart__bar--reservations"
+                    [style.width.%]="getReservationsBarWidth(currentReport, space.totalReservations)"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="report-table">
+        <div class="report-table__row report-table__row--head">
+          <span>Espacio</span>
+          <span>Ocupación</span>
+          <span>Ingreso total</span>
+          <span>Reservas</span>
+        </div>
+
+        @for (space of currentReport.spaces; track space.spaceId) {
+          <div class="report-table__row">
+            <span>{{ space.spaceName }}</span>
+            <span>{{ space.occupancyRate | number: '1.0-2' }}%</span>
+            <span>{{ space.totalIncome | currency: 'USD' : 'symbol' : '1.2-2' }}</span>
+            <span>{{ space.totalReservations }}</span>
+          </div>
+        }
+      </section>
+    }
+  }
+}

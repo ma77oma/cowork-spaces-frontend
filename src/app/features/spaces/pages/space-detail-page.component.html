@@ -1,0 +1,44 @@
+<app-page-header title="Detalle del espacio" subtitle="Consulta la configuración actual del espacio seleccionado." />
+
+@if (loading()) {
+  <app-loading-state label="Cargando detalle del espacio..." />
+} @else if (errorMessage()) {
+  <app-error-panel [message]="errorMessage()" />
+} @else {
+  @if (space(); as currentSpace) {
+    <section class="detail-card">
+      <div class="detail-card__header">
+        <div>
+          <h3>{{ currentSpace.name }}</h3>
+          <p>Capacidad para {{ currentSpace.capacity }} personas</p>
+        </div>
+
+        <app-status-badge [value]="currentSpace.status" />
+      </div>
+
+      <dl class="detail-card__grid">
+        <div>
+          <dt>Tarifa por hora</dt>
+          <dd>{{ currentSpace.baseHourlyRate | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+        </div>
+        <div>
+          <dt>Hora de apertura</dt>
+          <dd>{{ currentSpace.openingTime }}</dd>
+        </div>
+        <div>
+          <dt>Hora de cierre</dt>
+          <dd>{{ currentSpace.closingTime }}</dd>
+        </div>
+        <div>
+          <dt>Estado</dt>
+          <dd>{{ currentSpace.status }}</dd>
+        </div>
+      </dl>
+
+      <div class="detail-card__actions">
+        <a [routerLink]="['/spaces', currentSpace.id, 'edit']">Editar espacio</a>
+        <a [routerLink]="['/reservations/new']" [queryParams]="{ spaceId: currentSpace.id }">Reservar este espacio</a>
+      </div>
+    </section>
+  }
+}

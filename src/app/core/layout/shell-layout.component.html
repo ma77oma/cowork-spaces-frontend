@@ -1,0 +1,33 @@
+<div class="shell">
+  <aside class="shell__sidebar">
+    <div>
+      <p class="shell__eyebrow">CoWork Spaces</p>
+      <h1 class="text-white">Gestión de reservas</h1>
+      <p class="shell__subtitle">Opera espacios, reservas y reportes desde una sola consola.</p>
+    </div>
+
+    <nav class="shell__nav">
+      @if (authService.isAdmin()) {
+        <a routerLink="/spaces" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Espacios</a>
+      }
+      <a routerLink="/reservations/new" routerLinkActive="is-active">Nueva reserva</a>
+      <a routerLink="/my-reservations" routerLinkActive="is-active">Mis reservas</a>
+      <a routerLink="/reports" routerLinkActive="is-active">Reportes</a>
+    </nav>
+  </aside>
+
+  <div class="shell__content">
+    <header class="shell__topbar">
+      <div>
+        <p class="shell__topbar-label">Usuario autenticado</p>
+        <strong>{{ authService.userName() || 'Operador' }}</strong>
+      </div>
+
+      <button type="button" class="shell__logout" (click)="logout()">Cerrar sesión</button>
+    </header>
+
+    <main class="shell__main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

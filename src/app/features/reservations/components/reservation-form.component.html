@@ -1,0 +1,127 @@
+<section class="form-card">
+  @if (errorMessage()) {
+    <app-error-panel [message]="errorMessage()" />
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="reservation-form">
+    <label>
+      <span>Espacio</span>
+      <select formControlName="spaceId" [class.is-invalid]="isControlInvalid('spaceId')">
+        <option value="">Selecciona un espacio disponible</option>
+        @for (space of spaces(); track space.id) {
+          <option [value]="space.id">{{ space.name }}</option>
+        }
+      </select>
+    </label>
+
+    @if (getSelectedSpace(); as selectedSpace) {
+      <section class="selected-space-card">
+        <div class="selected-space-card__header">
+          <div>
+            <h3>{{ selectedSpace.name }}</h3>
+            <p>Detalle del espacio seleccionado</p>
+          </div>
+
+          <app-status-badge [value]="selectedSpace.status" />
+        </div>
+
+        <dl class="selected-space-card__grid">
+          <div>
+            <dt>Capacidad</dt>
+            <dd>{{ selectedSpace.capacity }} personas</dd>
+          </div>
+          <div>
+            <dt>Tarifa por hora</dt>
+            <dd>{{ selectedSpace.baseHourlyRate | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+          </div>
+          <div>
+            <dt>Apertura</dt>
+            <dd>{{ selectedSpace.openingTime }}</dd>
+          </div>
+          <div>
+            <dt>Cierre</dt>
+            <dd>{{ selectedSpace.closingTime }}</dd>
+          </div>
+        </dl>
+      </section>
+    }
+
+    <div class="form-grid">
+      <label>
+        <span>Fecha</span>
+        <p-datepicker
+          formControlName="reservationDate"
+          [showIcon]="true"
+          [class.is-invalid]="isControlInvalid('reservationDate')"
+          dateFormat="dd/mm/yy"
+          placeholder="Selecciona una fecha"
+          inputId="reservationDate"
+          appendTo="body"
+        />
+      </label>
+
+      <label>
+        <span>Hora de inicio</span>
+        <input
+          type="time"
+          formControlName="startTime"
+          [class.is-invalid]="isControlInvalid('startTime')"
+          placeholder="Selecciona hora de inicio"
+        >
+      </label>
+
+      <label>
+        <span>Hora de fin</span>
+        <input
+          type="time"
+          formControlName="endTime"
+          [class.is-invalid]="isControlInvalid('endTime')"
+          placeholder="Selecciona hora de fin"
+        >
+      </label>
+    </div>
+
+    @if (isScheduleInvalid()) {
+      <small>{{ getScheduleErrorMessage() }}</small>
+    }
+
+    <div class="form-actions">
+      <button type="button" class="secondary" (click)="requestPreview()" [disabled]="previewLoading()">
+        {{ previewLoading() ? 'Calculando...' : 'Previsualizar precio' }}
+      </button>
+
+      <button type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Creando reserva...' : 'Confirmar reserva' }}
+      </button>
+    </div>
+  </form>
+
+  @if (preview(); as currentPreview) {
+    <section class="preview-card">
+      <h3>Resumen estimado</h3>
+      <dl>
+        <div>
+          <dt>Duración</dt>
+          <dd>{{ currentPreview.durationHours }} horas</dd>
+        </div>
+        <div>
+          <dt>Tarifa base</dt>
+          <dd>{{ currentPreview.baseHourlyRate | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+        </div>
+        <div>
+          <dt>Precio final</dt>
+          <dd>{{ currentPreview.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+        </div>
+      </dl>
+    </section>
+  }
+
+  @if (getSelectedSpace()) {
+    <app-space-availability-list
+      [space]="getSelectedSpace() ?? null"
+      [reservationDate]="getReservationDate()"
+      [startTime]="form.controls.startTime.value"
+      [endTime]="form.controls.endTime.value"
+    />
+  }
+</section>

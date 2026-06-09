@@ -1,0 +1,93 @@
+@import 'ng-zorro-antd/ng-zorro-antd.min.css';
+@import 'primeicons/primeicons.css';
+
+:root {
+  color-scheme: light;
+  --p-surface-0: #ffffff;
+  --p-surface-50: #f8fafc;
+  --p-surface-100: #f1f5f9;
+  --p-surface-200: #e2e8f0;
+  --p-surface-700: #334155;
+  --p-surface-900: #0f172a;
+  --p-text-color: #0f172a;
+  --p-content-background: #ffffff;
+  --p-datepicker-date-color: #0f172a;
+  --p-datepicker-panel-background: #ffffff;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", sans-serif;
+  color: #0f172a;
+  background: #f4f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  color: #0f172a;
+  background: #fff;
+  color-scheme: light;
+}
+
+.p-component,
+.p-inputtext,
+.p-datepicker,
+.p-datepicker-panel,
+.p-inputwrapper,
+.p-overlay {
+  color-scheme: light;
+}
+
+.p-inputtext,
+.p-datepicker-input,
+.p-select,
+.ant-input,
+.ant-picker,
+.ant-select-selector {
+  color: #0f172a !important;
+  background: #fff !important;
+}
+
+.p-datepicker-panel,
+.p-datepicker-calendar-container,
+.p-datepicker-calendar,
+.p-datepicker-header,
+.p-datepicker-group,
+.p-timepicker,
+.ant-picker-panel {
+  color: #0f172a !important;
+  background: #fff !important;
+}
+
+a {
+  color: inherit;
+}

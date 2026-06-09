@@ -1,0 +1,48 @@
+<app-page-header
+  title="Mis reservas"
+  subtitle="Revisa el estado actual de tus reservas, importes, fechas y posibles reembolsos."
+  actionLabel="Nueva reserva"
+  [actionLink]="['/reservations/new']"
+/>
+
+@if (loading()) {
+  <app-loading-state label="Cargando tus reservas..." />
+} @else if (errorMessage() && !reservations().length) {
+  <section class="my-reservations-page__feedback">
+    <app-error-panel [message]="errorMessage()" />
+    <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">
+      {{ refreshing() ? 'Actualizando...' : 'Reintentar' }}
+    </button>
+  </section>
+} @else if (!reservations().length) {
+  <app-empty-state
+    title="Sin reservas registradas"
+    description="Aún no tienes reservas registradas."
+  />
+} @else {
+  @if (errorMessage()) {
+    <section class="my-reservations-page__feedback">
+      <app-error-panel [message]="errorMessage()" />
+      <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">
+        {{ refreshing() ? 'Actualizando...' : 'Reintentar' }}
+      </button>
+    </section>
+  }
+
+  <section class="my-reservations-page__summary">
+    <div>
+      <h3>Tienes {{ reservations().length }} reserva{{ reservations().length === 1 ? '' : 's' }}</h3>
+      <p>Consulta los detalles de cada reserva o cancela las que sigan activas.</p>
+    </div>
+
+    <button type="button" class="secondary" (click)="refreshReservations()" [disabled]="refreshing()">
+      {{ refreshing() ? 'Actualizando...' : 'Actualizar listado' }}
+    </button>
+  </section>
+
+  <app-reservation-list
+    [reservations]="reservations()"
+    [cancellingId]="cancellingId()"
+    (cancelRequested)="cancelReservation($event)"
+  />
+}

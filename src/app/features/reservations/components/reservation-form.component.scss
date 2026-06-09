@@ -1,0 +1,165 @@
+.form-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #dbe3ef;
+  background: #fff;
+}
+
+.reservation-form,
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.selected-space-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+  background: #f8fbff;
+}
+
+.selected-space-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.selected-space-card__header p,
+.selected-space-card__grid dt {
+  color: #64748b;
+}
+
+.selected-space-card__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+input,
+select,
+button {
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+}
+
+select {
+  color: #0f172a;
+}
+
+select:invalid,
+option[value=''] {
+  color: #64748b;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+select.is-invalid {
+  border-color: #f87171;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
+}
+
+:host ::ng-deep .p-datepicker,
+:host ::ng-deep .p-inputtext {
+  width: 100%;
+}
+
+:host ::ng-deep .p-inputtext {
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  color: #0f172a;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+}
+
+:host ::ng-deep .p-inputtext::placeholder {
+  color: #94a3b8;
+}
+
+:host ::ng-deep .p-datepicker .p-inputtext {
+  width: 100%;
+}
+
+:host ::ng-deep .p-datepicker-input-icon-container,
+:host ::ng-deep .p-datepicker-dropdown {
+  color: #475569;
+  background: #fff;
+}
+
+:host ::ng-deep .p-datepicker-panel {
+  color: #0f172a;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-datepicker:not(.p-disabled).p-focus .p-inputtext {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+:host ::ng-deep .p-invalid,
+:host ::ng-deep .p-inputtext.p-invalid,
+:host ::ng-deep .p-datepicker.p-invalid .p-inputtext {
+  border-color: #f87171;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+button {
+  border: 0;
+  color: #fff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+button.secondary {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.preview-card {
+  padding: 1rem;
+  border-radius: 16px;
+  background: #eff6ff;
+}
+
+.preview-card dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+small {
+  color: #b91c1c;
+}

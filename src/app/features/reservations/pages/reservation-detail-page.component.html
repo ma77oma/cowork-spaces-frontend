@@ -1,0 +1,70 @@
+<app-page-header
+  title="Detalle de reserva"
+  subtitle="Consulta estado, importe final, fechas y eventual reembolso."
+/>
+
+@if (loading()) {
+  <app-loading-state label="Cargando detalle de la reserva..." />
+} @else if (errorMessage()) {
+  <app-error-panel [message]="errorMessage()" />
+} @else {
+  @if (reservation(); as currentReservation) {
+    <section class="detail-card">
+      <div class="detail-card__header">
+        <div>
+          <h3>{{ currentReservation.spaceName }}</h3>
+          <p>Reserva #{{ currentReservation.id }}</p>
+        </div>
+
+        <app-status-badge [value]="currentReservation.status" />
+      </div>
+
+      <dl class="detail-grid">
+        <div>
+          <dt>Inicio</dt>
+          <dd>{{ currentReservation.startAt | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>Fin</dt>
+          <dd>{{ currentReservation.endAt | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>Duración</dt>
+          <dd>{{ currentReservation.durationHours }} horas</dd>
+        </div>
+        <div>
+          <dt>Precio final</dt>
+          <dd>{{ currentReservation.finalPrice | currency: 'USD' : 'symbol' : '1.2-2' }}</dd>
+        </div>
+        <div>
+          <dt>Reembolso</dt>
+          <dd>
+            {{
+              currentReservation.refundAmount !== null
+                ? (currentReservation.refundAmount | currency: 'USD' : 'symbol' : '1.2-2')
+                : 'No aplica'
+            }}
+          </dd>
+        </div>
+        <div>
+          <dt>Creada</dt>
+          <dd>{{ currentReservation.createdAt | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>Cancelada</dt>
+          <dd>{{ currentReservation.cancelledAt ? (currentReservation.cancelledAt | date: 'medium') : 'No aplica' }}</dd>
+        </div>
+      </dl>
+
+      <div class="detail-actions">
+        <button type="button" class="secondary" (click)="goToNewReservation()">Nueva reserva</button>
+
+        @if (currentReservation.status !== 'Cancelled' && currentReservation.status !== 'Completed') {
+          <button type="button" (click)="cancelReservation()" [disabled]="cancelling()">
+            {{ cancelling() ? 'Cancelando...' : 'Cancelar reserva' }}
+          </button>
+        }
+      </div>
+    </section>
+  }
+}
